@@ -1,333 +1,86 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#102033">
-<title>Money App | รายรับรายจ่าย</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="description" content="บันทึกรายรับ รายจ่าย พร้อมรายงานและกราฟ">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<title>เงินของฉัน</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f1f5f9;color:#172033;font-family:system-ui,sans-serif}
-header{background:#102033;color:white;padding:24px 18px;border-radius:0 0 24px 24px}
-h1{font-size:25px;margin:0}
-small{color:#94a3b8}
-.balance{font-size:36px;font-weight:800;margin:20px 0 4px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.stat{background:#ffffff15;padding:13px;border-radius:14px}
-.stat b{display:block;font-size:20px;margin-top:5px}
-main{max-width:700px;margin:auto;padding:15px}
-button,input,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:10px;padding:11px 14px}
-.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-.filters button{background:white;color:#172033}
-.filters button.active,.primary{background:#102033;color:white}
-.panel{background:white;border-radius:16px;padding:16px;margin-bottom:13px}
-h2{font-size:17px;margin:0 0 12px}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.green{color:#15803d}.red{color:#dc2626}
-input,select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:white}
-form label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}
-.tx{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #e2e8f0}
-.tx:last-child{border-bottom:0}
-.txinfo{flex:1;min-width:0}
-.txname{font-weight:700;overflow-wrap:anywhere}
-.meta{font-size:12px;color:#64748b;margin-top:3px}
-.amount{font-weight:800;white-space:nowrap}
-.tx button{padding:7px;background:#f1f5f9}
-.bar{height:8px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:6px}
-.bar span{display:block;height:100%;background:#2563eb}
-.rowcat{margin:12px 0;font-size:14px}
-.empty{text-align:center;padding:24px;color:#64748b}
-.actions{display:flex;gap:8px;margin-top:15px}
-.actions button{flex:1}
-footer{text-align:center;color:#64748b;font-size:12px;padding:15px}
+:root{--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--green:#15803d;--red:#dc2626;--blue:#2563eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.app{max-width:960px;margin:auto;padding-bottom:92px}.hero{background:linear-gradient(140deg,#0f172a,#26364c);color:white;padding:25px 18px 22px;border-radius:0 0 26px 26px}.brand{font-weight:850;font-size:25px}.muted{font-size:12px;color:var(--muted)}.hero .muted{color:#cbd5e1}.balance{font-size:36px;font-weight:850;margin-top:22px}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:16px}.tile{background:#ffffff12;border:1px solid #ffffff20;padding:12px;border-radius:14px}.tile small{display:block;color:#cbd5e1}.tile b{font-size:18px}.content{padding:14px}.nav{display:flex;gap:8px;overflow:auto;padding:0 0 12px}.nav button,.btn{border:1px solid var(--line);background:white;padding:10px 14px;border-radius:12px;font:inherit;font-weight:700;white-space:nowrap}.nav button.active,.primary{background:var(--ink);color:white;border-color:var(--ink)}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;min-width:0}.card h3{font-size:15px;margin:0 0 12px}.big{font-size:25px;font-weight:850}.green{color:var(--green)}.red{color:var(--red)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.toolbar input,.toolbar select,input,select{font:inherit;border:1px solid var(--line);border-radius:10px;padding:10px;background:white;min-width:0}.toolbar input{flex:1;min-width:145px}.tx{display:flex;align-items:center;gap:10px;background:white;border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0;cursor:pointer}.ico{width:40px;height:40px;display:grid;place-items:center;background:#f1f5f9;border-radius:12px;font-size:20px}.grow{flex:1;min-width:0}.txname{font-weight:750;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--muted);margin-top:3px}.money{font-weight:850;white-space:nowrap}.empty{padding:28px;text-align:center;color:var(--muted)}canvas{width:100%;height:230px;display:block}.chartlegend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.reporttable{width:100%;border-collapse:collapse;font-size:13px}.reporttable th,.reporttable td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:right}.reporttable th:first-child,.reporttable td:first-child{text-align:left}.reporttable th{color:var(--muted)}.fab{position:fixed;right:18px;bottom:18px;background:var(--ink);color:white;border:0;border-radius:17px;padding:14px 18px;font-weight:800;font-size:15px;box-shadow:0 8px 24px #0f172a40;z-index:5}.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffee;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:4;backdrop-filter:blur(10px)}.bottom>div{max-width:960px;width:100%;display:flex;justify-content:space-around;padding:8px}.bottom button{border:0;background:none;font-weight:700;color:var(--muted);padding:7px}.bottom button.active{color:var(--ink)}dialog{border:0;border-radius:22px;width:min(94%,500px);padding:0;box-shadow:0 20px 70px #0005}dialog::backdrop{background:#0008}.modal{padding:20px}.modal h2{margin:0 0 14px}.field{margin:12px 0}.field label{display:block;font-weight:750;font-size:13px;margin-bottom:6px}.field input,.field select{width:100%}.types{display:grid;grid-template-columns:1fr 1fr;gap:8px}.types button{padding:11px;border:1px solid var(--line);border-radius:10px;background:white;font-weight:800}.types button.sel{background:var(--ink);color:white}.actions{display:flex;gap:8px;margin-top:15px}.actions button{flex:1;padding:12px;border:0;border-radius:11px;font-weight:800}.cancel{background:#e2e8f0}.hide{display:none!important}.warning{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:11px;font-size:12px;color:#9a3412}.reportcontrols{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.reportcontrols select{flex:1}@media(max-width:640px){.grid{grid-template-columns:1fr}.tiles{gap:6px}.tile{padding:10px 8px}.tile b{font-size:15px}.content{padding:11px}.balance{font-size:32px}.money{font-size:14px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>💰 Money App</h1>
-  <small>จัดการเงินของคุณในทุกวัน</small>
-  <div class="balance" id="balance">฿0</div>
-  <small>ยอดคงเหลือทั้งหมด</small>
-  <div class="stats">
-    <div class="stat"><small>รายรับเดือนนี้</small><b id="income">฿0</b></div>
-    <div class="stat"><small>รายจ่ายเดือนนี้</small><b id="expense">฿0</b></div>
-  </div>
+<div class="app">
+<header class="hero">
+ <div class="brand">💰 เงินของฉัน</div><div class="muted" id="dateLabel"></div>
+ <div class="balance" id="balance">฿0</div><div class="muted">ยอดคงเหลือจากรายการทั้งหมด</div>
+ <div class="tiles"><div class="tile"><small>รายรับเดือนนี้</small><b id="topIncome">฿0</b></div><div class="tile"><small>รายจ่ายเดือนนี้</small><b id="topExpense">฿0</b></div><div class="tile"><small>รายการทั้งหมด</small><b id="topCount">0</b></div></div>
 </header>
-
-<main>
-  <div class="filters">
-    <button class="active" data-filter="month">เดือนนี้</button>
-    <button data-filter="today">วันนี้</button>
-    <button data-filter="all">ทั้งหมด</button>
+<main class="content">
+ <nav class="nav">
+  <button class="active" data-panel="home">🏠 ภาพรวม</button><button data-panel="reports">📊 รายงาน</button><button data-panel="records">🧾 รายการ</button><button data-panel="settings">⚙️ ตั้งค่า</button>
+ </nav>
+ <section id="home" class="panel active">
+  <div class="grid">
+   <div class="card"><h3>กราฟรายรับ-รายจ่าย (6 เดือน)</h3><canvas id="chart" width="700" height="280"></canvas><div class="chartlegend"><span><i class="dot" style="background:#16a34a"></i>รายรับ</span><span><i class="dot" style="background:#dc2626"></i>รายจ่าย</span></div></div>
+   <div class="card"><h3>สรุปเดือนนี้</h3><div class="muted">เงินสุทธิ</div><div class="big" id="net">฿0</div><p class="green">รายรับ <b id="homeIncome">฿0</b></p><p class="red">รายจ่าย <b id="homeExpense">฿0</b></p><hr style="border:0;border-top:1px solid var(--line)"><h3>หมวดที่จ่ายมากที่สุด</h3><div id="topCats" class="muted">ยังไม่มีข้อมูล</div></div>
   </div>
-
-  <section class="panel">
-    <h2>สรุปยอด</h2>
-    <div class="summary">
-      <div>รายรับ <b class="green" id="sumIncome">฿0</b></div>
-      <div>รายจ่าย <b class="red" id="sumExpense">฿0</b></div>
-    </div>
-    <p>ยอดสุทธิ: <b id="net">฿0</b></p>
-  </section>
-
-  <section class="panel">
-    <h2>เพิ่มรายการใหม่</h2>
-    <form id="entryForm">
-      <label for="type">ประเภท</label>
-      <select id="type">
-        <option value="expense">รายจ่าย</option>
-        <option value="income">รายรับ</option>
-      </select>
-
-      <label for="amount">จำนวนเงิน (บาท)</label>
-      <input id="amount" type="number" min="0.01" step="0.01"
-        placeholder="เช่น 150" required>
-
-      <label for="name">รายละเอียด</label>
-      <input id="name" maxlength="100" placeholder="เช่น ค่าอาหาร" required>
-
-      <label for="category">หมวดหมู่</label>
-      <select id="category">
-        <option>อาหาร</option>
-        <option>เดินทาง</option>
-        <option>รถยนต์</option>
-        <option>บ้าน</option>
-        <option>ช้อปปิ้ง</option>
-        <option>บิลและค่าสาธารณูปโภค</option>
-        <option>เงินเดือน</option>
-        <option>ธุรกิจ</option>
-        <option>อื่น ๆ</option>
-      </select>
-
-      <label for="date">วันที่</label>
-      <input id="date" type="date" required>
-
-      <div class="actions">
-        <button class="primary" type="submit">＋ บันทึกรายการ</button>
-        <button type="reset">ล้าง</button>
-      </div>
-    </form>
-  </section>
-
-  <section class="panel">
-    <h2>รายจ่ายแยกตามหมวด</h2>
-    <div id="categories"></div>
-  </section>
-
-  <section class="panel">
-    <h2>ประวัติรายการ</h2>
-    <input id="search" placeholder="🔎 ค้นหารายการ...">
-    <div id="transactions"></div>
-    <div class="actions">
-      <button id="exportBtn">ส่งออกข้อมูล CSV</button>
-      <button id="backupBtn">สำรองข้อมูล JSON</button>
-    </div>
-    <label for="importFile">นำเข้าข้อมูลสำรอง JSON</label>
-    <input id="importFile" type="file" accept=".json,application/json">
-  </section>
+ </section>
+ <section id="reports" class="panel">
+  <div class="card"><h3>รายงานรายเดือนและรายปี</h3><div class="reportcontrols"><select id="reportYear"></select><select id="reportMonth"><option value="all">รวมทั้งปี</option><option value="01">มกราคม</option><option value="02">กุมภาพันธ์</option><option value="03">มีนาคม</option><option value="04">เมษายน</option><option value="05">พฤษภาคม</option><option value="06">มิถุนายน</option><option value="07">กรกฎาคม</option><option value="08">สิงหาคม</option><option value="09">กันยายน</option><option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option></select></div>
+  <div class="grid"><div><div class="muted">รายรับ</div><div class="big green" id="repIncome">฿0</div></div><div><div class="muted">รายจ่าย</div><div class="big red" id="repExpense">฿0</div></div></div><p>สุทธิ: <b id="repNet">฿0</b></p>
+  <div style="overflow:auto"><table class="reporttable"><thead><tr><th>เดือน</th><th>รายรับ</th><th>รายจ่าย</th><th>สุทธิ</th></tr></thead><tbody id="reportRows"></tbody></table></div>
+  <div class="actions"><button class="btn primary" onclick="exportExcel()">⬇ ส่งออก Excel (CSV)</button></div><p class="muted">ไฟล์ CSV เปิดด้วย Microsoft Excel หรือ Google Sheets ได้</p>
+  </div>
+ </section>
+ <section id="records" class="panel">
+  <div class="toolbar"><select id="filter"><option value="month">เดือนนี้</option><option value="today">วันนี้</option><option value="all">ทั้งหมด</option></select><input id="search" placeholder="ค้นหารายการหรือหมวดหมู่"></div><div id="list"></div>
+ </section>
+ <section id="settings" class="panel">
+  <div class="card"><h3>ความปลอดภัย</h3><p class="muted">ตั้ง PIN เพื่อให้แอปถามรหัสเมื่อเปิดใช้งานในเบราว์เซอร์นี้</p><div class="field"><label>PIN ใหม่ (4–8 หลัก)</label><input id="newPin" type="password" inputmode="numeric" maxlength="8" placeholder="กรอก PIN"></div><div class="field"><label>ยืนยัน PIN</label><input id="confirmPin" type="password" inputmode="numeric" maxlength="8" placeholder="กรอก PIN อีกครั้ง"></div><div class="actions"><button class="btn primary" onclick="setPin()">ตั้ง/เปลี่ยน PIN</button><button class="btn" onclick="removePin()">ปิด PIN</button></div><div id="pinMsg" class="muted" style="margin-top:8px"></div><div class="warning" style="margin-top:12px">PIN นี้เป็นเพียงการล็อกหน้าจอในเครื่อง ไม่ใช่ระบบรักษาความปลอดภัยระดับธนาคาร และไม่เข้ารหัสข้อมูลในเบราว์เซอร์</div></div>
+  <div class="card" style="margin-top:12px"><h3>สำรองข้อมูล</h3><p class="muted">บันทึกรายการเป็นไฟล์ JSON แล้วนำกลับเข้ามาได้ภายหลัง</p><div class="actions"><button class="btn" onclick="backup()">สำรองข้อมูล</button><button class="btn" onclick="restore()">นำเข้าข้อมูล</button></div><button class="btn" style="margin-top:10px" onclick="installApp()">📲 ติดตั้งแอป</button><p class="muted" id="installHelp"></p></div>
+ </section>
 </main>
-<footer>Money App · ข้อมูลเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้</footer>
-
+</div>
+<button class="fab" onclick="openAdd()">＋ เพิ่มรายการ</button>
+<nav class="bottom"><div><button class="active" data-panel="home">🏠 ภาพรวม</button><button data-panel="reports">📊 รายงาน</button><button data-panel="records">🧾 รายการ</button><button data-panel="settings">⚙️ ตั้งค่า</button></div></nav>
+<dialog id="txDialog"><div class="modal"><h2 id="dialogTitle">เพิ่มรายการ</h2><div class="types"><button id="expenseBtn" class="sel" onclick="pickType('expense')">💸 รายจ่าย</button><button id="incomeBtn" onclick="pickType('income')">💰 รายรับ</button></div><div class="field"><label>จำนวนเงิน (บาท)</label><input id="amount" type="number" min="0" step=".01" placeholder="0"></div><div class="field"><label>รายการ</label><input id="name" placeholder="เช่น ค่าอาหาร"></div><div class="field"><label>หมวดหมู่</label><select id="cat"><option>อาหาร</option><option>เดินทาง</option><option>รถยนต์</option><option>บ้าน</option><option>ช้อปปิ้ง</option><option>สัตว์เลี้ยง</option><option>บิล/ค่าใช้จ่ายประจำ</option><option>เงินเดือน</option><option>งานเสริม</option><option>อื่น ๆ</option></select></div><div class="field"><label>วันที่</label><input id="txDate" type="date"></div><div class="actions"><button class="cancel" onclick="txDialog.close()">ยกเลิก</button><button class="btn primary" onclick="saveTx()">บันทึก</button></div><div class="actions"><button id="deleteTx" class="btn hide" style="color:#b91c1c" onclick="deleteTx()">ลบรายการนี้</button></div></div></dialog>
+<div id="lockScreen" class="hide" style="position:fixed;inset:0;background:#0f172a;color:white;z-index:99;display:flex;align-items:center;justify-content:center;padding:22px"><div style="width:min(100%,360px);text-align:center"><div style="font-size:48px">🔐</div><h2>เงินของฉัน</h2><p style="color:#cbd5e1">กรอก PIN เพื่อเข้าใช้งาน</p><input id="unlockPin" type="password" inputmode="numeric" maxlength="8" placeholder="PIN" style="width:100%;text-align:center;font-size:22px;letter-spacing:8px"><button class="btn" style="margin-top:12px;width:100%;background:#fff" onclick="unlock()">ปลดล็อก</button><p id="lockError" style="color:#fca5a5"></p></div></div>
 <script>
-const KEY = "money-app-records-v1";
-const $ = id => document.getElementById(id);
-let records = [];
-let filter = "month";
-
-try {
-  const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
-  if (Array.isArray(saved)) records = saved;
-} catch (e) {}
-
-function today() {
-  const d = new Date();
-  return d.getFullYear() + "-" +
-    String(d.getMonth()+1).padStart(2,"0") + "-" +
-    String(d.getDate()).padStart(2,"0");
-}
-$("date").value = today();
-
-function money(n) {
-  return "฿" + Number(n || 0).toLocaleString("th-TH", {
-    minimumFractionDigits: 0, maximumFractionDigits: 2
-  });
-}
-function save() {
-  localStorage.setItem(KEY, JSON.stringify(records));
-}
-function total(list, type) {
-  return list.filter(x => x.type === type)
-    .reduce((sum,x) => sum + Number(x.amount), 0);
-}
-function safe(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  })[c]);
-}
-function visible(x) {
-  if (filter === "today") return x.date === today();
-  if (filter === "month") return x.date.slice(0,7) === today().slice(0,7);
-  return true;
-}
-
-function render() {
-  const month = records.filter(x =>
-    x.date.slice(0,7) === today().slice(0,7));
-  $("balance").textContent =
-    money(total(records,"income") - total(records,"expense"));
-  $("income").textContent = money(total(month,"income"));
-  $("expense").textContent = money(total(month,"expense"));
-
-  const search = $("search").value.trim().toLowerCase();
-  const list = records.filter(visible).filter(x =>
-    (x.name + " " + x.category).toLowerCase().includes(search))
-    .sort((a,b) => b.date.localeCompare(a.date) || b.id-a.id);
-
-  const inc = total(list,"income");
-  const exp = total(list,"expense");
-  $("sumIncome").textContent = money(inc);
-  $("sumExpense").textContent = money(exp);
-  $("net").textContent = money(inc-exp);
-
-  if (!list.length) {
-    $("transactions").innerHTML =
-      '<div class="empty">ยังไม่มีรายการในช่วงนี้</div>';
-  } else {
-    $("transactions").innerHTML = list.map(x => `
-      <div class="tx">
-        <div class="txinfo">
-          <div class="txname">${safe(x.name)}</div>
-          <div class="meta">${safe(x.category)} · ${safe(x.date)}</div>
-        </div>
-        <div class="amount ${x.type==="income"?"green":"red"}">
-          ${x.type==="income"?"+":"−"}${money(x.amount)}
-        </div>
-        <button type="button" data-edit="${x.id}" aria-label="แก้ไข">✏️</button>
-        <button type="button" data-delete="${x.id}" aria-label="ลบ">🗑️</button>
-      </div>`).join("");
-  }
-
-  const cats = {};
-  list.filter(x => x.type==="expense").forEach(x => {
-    cats[x.category] = (cats[x.category] || 0) + Number(x.amount);
-  });
-  const entries = Object.entries(cats).sort((a,b) => b[1]-a[1]);
-  const max = entries.length ? entries[0][1] : 0;
-  $("categories").innerHTML = entries.length ? entries.map(([name,value]) => `
-    <div class="rowcat">
-      <div style="display:flex;justify-content:space-between;gap:8px">
-        <span>${safe(name)}</span><b>${money(value)}</b>
-      </div>
-      <div class="bar"><span style="width:${max ? value/max*100 : 0}%"></span></div>
-    </div>`).join("") :
-    '<div class="empty">ยังไม่มีข้อมูลรายจ่าย</div>';
-}
-
-$("entryForm").addEventListener("submit", e => {
-  e.preventDefault();
-  const amount = Number($("amount").value);
-  const name = $("name").value.trim();
-  if (!Number.isFinite(amount) || amount <= 0 || !name) {
-    alert("กรุณาตรวจสอบจำนวนเงินและรายละเอียด");
-    return;
-  }
-  records.push({
-    id: Date.now(),
-    type: $("type").value,
-    amount,
-    name,
-    category: $("category").value,
-    date: $("date").value
-  });
-  save();
-  $("entryForm").reset();
-  $("date").value = today();
-  render();
-});
-
-document.querySelectorAll("[data-filter]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    filter = btn.dataset.filter;
-    document.querySelectorAll("[data-filter]").forEach(b =>
-      b.classList.toggle("active", b === btn));
-    render();
-  });
-});
-$("search").addEventListener("input", render);
-
-$("transactions").addEventListener("click", e => {
-  const edit = e.target.closest("[data-edit]");
-  const del = e.target.closest("[data-delete]");
-  if (edit) {
-    const x = records.find(r => r.id === Number(edit.dataset.edit));
-    if (!x) return;
-    const name = prompt("แก้ไขรายละเอียด", x.name);
-    if (name === null) return;
-    const amount = prompt("แก้ไขจำนวนเงิน", x.amount);
-    if (amount === null) return;
-    if (!name.trim() || !Number.isFinite(Number(amount)) || Number(amount)<=0) {
-      alert("ข้อมูลไม่ถูกต้อง"); return;
-    }
-    x.name = name.trim();
-    x.amount = Number(amount);
-    save(); render();
-  }
-  if (del) {
-    const id = Number(del.dataset.delete);
-    if (confirm("ต้องการลบรายการนี้หรือไม่?")) {
-      records = records.filter(r => r.id !== id);
-      save(); render();
-    }
-  }
-});
-
-function download(content, filename, mime) {
-  const blob = new Blob([content], {type:mime});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = filename; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-$("backupBtn").addEventListener("click", () =>
-  download(JSON.stringify(records,null,2),"money-backup.json","application/json"));
-
-$("exportBtn").addEventListener("click", () => {
-  const rows = [["วันที่","ประเภท","รายการ","หมวดหมู่","จำนวนเงิน"],
-    ...records.map(x => [x.date,x.type,x.name,x.category,x.amount])];
-  const csv = "\uFEFF" + rows.map(row =>
-    row.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(",")
-  ).join("\r\n");
-  download(csv,"money-report.csv","text/csv;charset=utf-8");
-});
-
-$("importFile").addEventListener("change", async e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    const data = JSON.parse(await file.text());
-    if (!Array.isArray(data) || !data.every(x =>
-      x && ["income","expense"].includes(x.type) &&
-      Number.isFinite(Number(x.amount)) && x.date && x.name
-    )) throw new Error("invalid");
-    if (confirm("นำเข้าข้อมูลและแทนที่รายการปัจจุบันทั้งหมดหรือไม่?")) {
-      records = data.map(x => ({
-        id:Number(x.id)||Date.now()+Math.random(),
-        type:x.type, amount:Number(x.amount),
-        name:String(x.name), category:String(x.category||"อื่น ๆ"),
-        date:String(x.date)
-      }));
-      save(); render(); alert("นำเข้าข้อมูลสำเร็จ");
-    }
-  } catch (err) {
-    alert("ไฟล์ไม่ถูกต้องหรือไม่ใช่ไฟล์สำรองของ Money App");
-  }
-  e.target.value = "";
-});
-
+const DATA_KEY='myMoneyWebAppV2',PIN_KEY='myMoneyPinHashV2';let tx=JSON.parse(localStorage.getItem(DATA_KEY)||'[]'),kind='expense',editing=null,deferredInstall=null;
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),monthNow=()=>today().slice(0,7),yearNow=()=>today().slice(0,4);
+function money(n){return '฿'+Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:2})}
+function persist(){localStorage.setItem(DATA_KEY,JSON.stringify(tx))}
+function sum(arr,k){return arr.filter(x=>x.type===k).reduce((s,x)=>s+Number(x.amount),0)}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function pickType(t){kind=t;$('expenseBtn').classList.toggle('sel',t==='expense');$('incomeBtn').classList.toggle('sel',t==='income')}
+function openAdd(){editing=null;$('dialogTitle').textContent='เพิ่มรายการ';$('amount').value='';$('name').value='';$('cat').value='อาหาร';$('txDate').value=today();$('deleteTx').classList.add('hide');pickType('expense');$('txDialog').showModal()}
+function editTx(id){let t=tx.find(x=>x.id===id);if(!t)return;editing=id;$('dialogTitle').textContent='แก้ไขรายการ';$('amount').value=t.amount;$('name').value=t.name;$('cat').value=t.cat;$('txDate').value=t.date;$('deleteTx').classList.remove('hide');pickType(t.type);$('txDialog').showModal()}
+function saveTx(){let amount=Number($('amount').value),name=$('name').value.trim(),date=$('txDate').value;if(amount<=0||!name||!date)return alert('กรุณากรอกจำนวนเงิน รายการ และวันที่');let obj={id:editing||Date.now(),type:kind,amount,name,cat:$('cat').value,date};tx=editing?tx.map(x=>x.id===editing?obj:x):[...tx,obj];persist();$('txDialog').close();render()}
+function deleteTx(){if(confirm('ลบรายการนี้หรือไม่?')){tx=tx.filter(x=>x.id!==editing);persist();$('txDialog').close();render()}}
+document.querySelectorAll('[data-panel]').forEach(b=>b.addEventListener('click',()=>{let id=b.dataset.panel;document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-panel]').forEach(x=>x.classList.toggle('active',x.dataset.panel===id));if(id==='reports')renderReport();if(id==='home')drawChart()}));
+$('filter').onchange=renderList;$('search').oninput=renderList;$('reportYear').onchange=renderReport;$('reportMonth').onchange=renderReport;
+function render(){let allIn=sum(tx,'income'),allOut=sum(tx,'expense'),m=tx.filter(x=>x.date.slice(0,7)===monthNow());$('dateLabel').textContent=new Date().toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});$('balance').textContent=money(allIn-allOut);$('topIncome').textContent=money(sum(m,'income'));$('topExpense').textContent=money(sum(m,'expense'));$('topCount').textContent=tx.length;$('homeIncome').textContent=money(sum(m,'income'));$('homeExpense').textContent=money(sum(m,'expense'));$('net').textContent=money(sum(m,'income')-sum(m,'expense'));let cats={};m.filter(x=>x.type==='expense').forEach(x=>cats[x.cat]=(cats[x.cat]||0)+x.amount);let top=Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,4);$('topCats').innerHTML=top.length?top.map(x=>`<p style="margin:7px 0">${safe(x[0])} <b style="float:right">${money(x[1])}</b></p>`).join(''):'ยังไม่มีข้อมูล';renderList();initYears();renderReport();drawChart()}
+function renderList(){let f=$('filter').value||'month',q=$('search').value.toLowerCase(),v=tx.filter(x=>(f==='all'||(f==='today'&&x.date===today())||(f==='month'&&x.date.slice(0,7)===monthNow()))&&(x.name+' '+x.cat).toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);$('list').innerHTML=v.length?v.map(x=>`<div class="tx" onclick="editTx(${x.id})"><div class="ico">${x.type==='income'?'💰':'💸'}</div><div class="grow"><div class="txname">${safe(x.name)}</div><div class="meta">${safe(x.cat)} · ${x.date}</div></div><div class="money ${x.type==='income'?'green':'red'}">${x.type==='income'?'+':'−'}${money(x.amount)}</div></div>`).join(''):'<div class="empty">ยังไม่มีรายการในช่วงนี้</div>'}
+function initYears(){let years=[...new Set([yearNow(),...tx.map(x=>x.date.slice(0,4))])].sort().reverse();let old=$('reportYear').value;$('reportYear').innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');if(years.includes(old))$('reportYear').value=old}
+function renderReport(){if(!$('reportYear').options.length)initYears();let y=$('reportYear').value||yearNow(),mo=$('reportMonth').value||'all',v=tx.filter(x=>x.date.slice(0,4)===y&&(mo==='all'||x.date.slice(5,7)===mo));$('repIncome').textContent=money(sum(v,'income'));$('repExpense').textContent=money(sum(v,'expense'));$('repNet').textContent=money(sum(v,'income')-sum(v,'expense'));let months=mo==='all'?Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0')):[mo];$('reportRows').innerHTML=months.map(m=>{let a=v.filter(x=>x.date.slice(5,7)===m),i=sum(a,'income'),e=sum(a,'expense');return `<tr><td>${new Date(Number(y),Number(m)-1,1).toLocaleDateString('th-TH',{month:'long'})}</td><td class="green">${money(i)}</td><td class="red">${money(e)}</td><td>${money(i-e)}</td></tr>`}).join('')}
+function drawChart(){let c=$('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);let months=[];for(let i=5;i>=0;i--){let d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months.push(d.toISOString().slice(0,7))}let data=months.map(m=>({m,i:sum(tx.filter(x=>x.date.slice(0,7)===m),'income'),e:sum(tx.filter(x=>x.date.slice(0,7)===m),'expense')}));let max=Math.max(1,...data.flatMap(x=>[x.i,x.e])),left=44,bottom=35,top=12,plotH=h-top-bottom,plotW=w-left-12;ctx.font='13px sans-serif';ctx.strokeStyle='#e2e8f0';ctx.fillStyle='#64748b';for(let k=0;k<=4;k++){let y=top+plotH*k/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-8,y);ctx.stroke();ctx.fillText(Math.round(max*(1-k/4)).toLocaleString('en-US'),2,y+4)}let group=plotW/data.length,bw=Math.min(24,group*.28);data.forEach((d,i)=>{let x=left+group*i+group/2;let hi=d.i/max*plotH,he=d.e/max*plotH;ctx.fillStyle='#16a34a';ctx.fillRect(x-bw-2,top+plotH-hi,bw,hi);ctx.fillStyle='#dc2626';ctx.fillRect(x+2,top+plotH-he,bw,he);ctx.fillStyle='#64748b';ctx.textAlign='center';ctx.fillText(d.m.slice(5),x,h-10)});ctx.textAlign='left'}
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function exportExcel(){let y=$('reportYear').value||yearNow(),mo=$('reportMonth').value||'all',v=tx.filter(x=>x.date.slice(0,4)===y&&(mo==='all'||x.date.slice(5,7)===mo)).sort((a,b)=>a.date.localeCompare(b.date));let rows=[['วันที่','ประเภท','รายการ','หมวดหมู่','จำนวนเงิน'],...v.map(x=>[x.date,x.type==='income'?'รายรับ':'รายจ่าย',x.name,x.cat,x.amount])];let csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download=`รายงานรายรับรายจ่าย_${y}_${mo}.csv`;a.click();URL.revokeObjectURL(a.href)}
+function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(tx,null,2)],{type:'application/json'}));a.download='money-app-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function restore(){let i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!Array.isArray(d))throw Error();if(confirm('การนำเข้าจะแทนที่รายการปัจจุบัน ต้องการดำเนินการหรือไม่?')){tx=d;persist();render();alert('นำเข้าข้อมูลแล้ว')}}catch(e){alert('ไฟล์สำรองไม่ถูกต้อง')}};r.readAsText(i.files[0])};i.click()}
+async function digest(s){let bytes=new TextEncoder().encode(s);let hash=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
+async function setPin(){let a=$('newPin').value,b=$('confirmPin').value;if(!/^\d{4,8}$/.test(a)){ $('pinMsg').textContent='PIN ต้องเป็นตัวเลข 4–8 หลัก';return}if(a!==b){$('pinMsg').textContent='PIN ไม่ตรงกัน';return}localStorage.setItem(PIN_KEY,await digest(a));$('newPin').value='';$('confirmPin').value='';$('pinMsg').textContent='ตั้ง PIN แล้ว จะถามรหัสเมื่อเปิดหน้าเว็บใหม่';alert('ตั้ง PIN สำเร็จ')}
+function removePin(){if(!localStorage.getItem(PIN_KEY))return alert('ยังไม่ได้ตั้ง PIN');let p=prompt('กรอก PIN ปัจจุบันเพื่อปิด');digest(p||'').then(h=>{if(h===localStorage.getItem(PIN_KEY)){localStorage.removeItem(PIN_KEY);$('pinMsg').textContent='ปิด PIN แล้ว'}else alert('PIN ไม่ถูกต้อง')})}
+async function unlock(){let h=await digest($('unlockPin').value);if(h===localStorage.getItem(PIN_KEY)){$('lockScreen').classList.add('hide');$('unlockPin').value='';$('lockError').textContent=''}else $('lockError').textContent='PIN ไม่ถูกต้อง'}
+let installPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installHelp').textContent='พร้อมติดตั้ง กดปุ่ม “ติดตั้งแอป”'});window.addEventListener('appinstalled',()=>{$('installHelp').textContent='ติดตั้งแอปแล้ว'});
+async function installApp(){if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else $('installHelp').textContent='Android: เปิดเมนู ⋮ ใน Chrome แล้วเลือก “ติดตั้งแอป” หรือ “เพิ่มลงในหน้าจอหลัก”'}
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if(localStorage.getItem(PIN_KEY))$('lockScreen').classList.remove('hide');
 render();
 </script>
-</body>
-</html>
+</body></html>
